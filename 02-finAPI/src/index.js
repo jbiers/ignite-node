@@ -13,7 +13,7 @@ const customers = [];
  *  id - uuid
  *  statement - []
  */
-app.post("/account", (request, response) => {
+app.post('/account', (request, response) => {
     const { cpf, name } = request.body;
 
     const customerAlreadyExists = customers.some((customer) => customer.cpf === cpf);
@@ -30,6 +30,18 @@ app.post("/account", (request, response) => {
     });
 
     return response.status(201).send();
+});
+
+app.get('/statement/', (request, response) => {
+    const { cpf } = request.headers;
+
+    const customer = customers.find((customer) => customer.cpf === cpf);
+
+    if (!customer) {
+        return response.status(404).json({'error': 'Customer not found'})
+    }
+
+    return response.status(200).json(customer.statement);
 });
 
 app.listen(3333);
